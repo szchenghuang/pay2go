@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>智付寶 API 交易測試 / Pay2Go API Trade Simulator</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.3/jquery.mCustomScrollbar.css">
+    <style>
+    a, a:hover, a:focus {
+        outline: none;
+        text-decoration: none;
+    }
+    .mCustomScrollbar {
+        overflow: auto;
+        max-height: 450px;
+        padding: 10px 0 !important;
+    }
+    .form-group:last-of-type {
+        margin-bottom: 0 !important;
+    }
+    .input-group-addon {
+        min-width: 150px;
+    }
+    </style>
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <header>
+        <h4 class="text-center">
+            <a href="https://www.pay2go.com/" target="_blank">智付寶</a> API 交易測試
+            <span> / </span>
+            <a href="https://www.pay2go.com/" target="_blank">Pay2go</a> API Trade Simulator
+        </h4>
+        <h6 class="text-center">
+            <span class="alert-danger">上色</span>代表必填欄位
+            <span> / </span>
+            Mandatory fields are <span class="alert-danger">colored</span>
+        </h6>
+    </header>
+    <section class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#pay" aria-controls="pay" role="tab" data-toggle="tab">付款 / Pay</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#query" aria-controls="query" role="tab" data-toggle="tab">查詢 / Query</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="payment-tabs">
+                    <div role="tabpanel" class="tab-pane fade in active" id="pay">
+                        <div class="inputs">
+                            <div class="mCustomScrollbar">
+                                <form id="form-pay"></form>
+                            </div>
+                            <button class="btn btn-primary btn-submit center-block" id="btn-submit-pay">付款 / Pay</button>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="query">
+                        <div class="inputs">
+                            <div class="mCustomScrollbar">
+                                <form id="form-query"></form>
+                            </div>
+                            <button class="btn btn-primary btn-submit center-block" id="btn-submit-query">查詢/ Query</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="//www.bichlmeier.info/sha256.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.3/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script>
+    (function($) {
+        $( '.mCustomScrollbar' ).mCustomScrollbar({
+            theme: 'dark',
+            scrollInertia: 300,
+            autoExpandScrollbar: true
+        });
+
+        function createFormInput( elemAttrs ) {
+            var $divFormGroup = $( '<div>' );
+            $divFormGroup.addClass( 'form-group' );
+
+            var $divInputGroup = $( '<div>' );
+            $divInputGroup.addClass( 'input-group' );
+            $divFormGroup.append( $divInputGroup );
+
+            var $divInputGroupAddOn = $( '<div>' );
+            $divInputGroupAddOn.addClass( 'input-group-addon' );
+            elemAttrs.class && $divInputGroupAddOn.addClass( elemAttrs.class );
+            $divInputGroupAddOn.text( elemAttrs.label );
+            $divInputGroup.append( $divInputGroupAddOn );
+
+            var $elem = $( '<' + elemAttrs.tag + '>' );
+            $elem.addClass( 'form-control' );
+            elemAttrs.gen && $elem.addClass( 'gen' );
+
+            if ( elemAttrs.tag === 'input' ) {
+                for ( attr in elemAttrs.attrs ) {
+                    $elem.attr( attr, elemAttrs.attrs[ attr ] );
+                }
+            } else if ( elemAttrs.tag === 'select' ) {
+                $elem.attr( 'name', elemAttrs.attrs.name );
+                for ( option in elemAttrs.options ) {
+                    var $option = $( '<option>' );
+                    $option.text( elemAttrs.options[ option ] );
+                    $elem.append( $option );
+                }
+            }
+
+            $divInputGroup.append( $elem );
+
+            return $divFormGroup;
+        };
+
+        function getValue( formID, name ) {
+            return $( '#' + formID + ' [name="' + name + '"]' ).val();
+        };
+
+        function generateHash( formID ) {
+            var hashKey = getValue( formID, 'HashKey' );
+            var amt = getValue( formID, 'Amt' );
+            var merchantID = getValue( formID, 'MerchantID' );
+            var merchantOrderNo = getValue( formID, 'MerchantOrderNo' );
+            var hashIV = getValue( formID, 'HashIV' );
+
+            if ( formID === 'form-pay' ) {
+                var timeStamp = getValue( formID, 'TimeStamp' );
+                var version = getValue( formID, 'Version' );
+                var seed =
+                    'HashKey=' + hashKey +
+                    '&Amt=' + amt +
+                    '&MerchantID=' + merchantID +
+                    '&MerchantOrderNo=' + merchantOrderNo + 
+                    '&TimeStamp=' + timeStamp + 
+                    '&Version=' + version +
+                    '&HashIV=' + hashIV;
+            } else if ( formID === 'form-query' ) {
+                var seed =
+                    'IV=' + hashIV +
+                    '&Amt=' + amt +
+                    '&MerchantID=' + merchantID + 
+                    '&MerchantOrderNo=' + merchantOrderNo +
+                    '&Key=' + hashKey;
+            }
+
+            if ( seed.indexOf( '=&' ) != -1 || seed[ seed.length - 1 ] === '=' ) {
+                $( '#' + formID + ' input[name="CheckValue"]' ).val( '' );
+                return;
+            }
+
+            var hash = sha256_digest( seed ).toUpperCase();
+            $( '#' + formID + ' input[name="CheckValue"]' ).val( hash );
+        };
+
+        [ 'pay', 'query' ].forEach( function( category ) {
+            var formIDSelector = '#form-' + category;
+            $.getJSON( category + '.json', function( nodes ) {
+                $.each( nodes, function( index, node ) {
+                    $( formIDSelector ).append( createFormInput( node ) );
+                });
+
+                $( formIDSelector + ' .gen' ).change( function() {
+                    generateHash( 'form-' + category );
+                });
+                $( formIDSelector + ' .gen' ).keyup( function() {
+                    generateHash( 'form-' + category );
+                });
+
+                $( formIDSelector + ' input[name="MerchantOrderNo"]' ).val( Math.random().toString( 36 ).substring( 3 ).toUpperCase() );
+                $( formIDSelector + ' input[name="TimeStamp"]' ).val( Date.now() / 1000 | 0 );
+                generateHash( 'form-' + category );
+            });
+
+            $( '#btn-submit-' + category ).click( function( event ) {
+                event.preventDefault();
+
+                function createInput( name, value ) {
+                    var $input = $( '<input>' );
+                    $input.attr( 'type', 'hidden' );
+                    $input.attr( 'name', name );
+                    $input.attr( 'value', value );
+                    return $input;
+                };
+
+                if ( category === 'pay' ) {
+                    var $iframe = $( '<iframe>' );
+                    $iframe.css( 'display', 'none' );
+                    $( 'body' ).append( $iframe );
+
+                    var $form = $( '<form>' );
+                    $form.attr( 'method', 'POST' );
+                    $form.attr( 'target', '_self' );
+                    $form.attr( 'action', 'https://capi.pay2go.com/MPG/mpg_gateway' );
+
+                    var formID = 'form-' + category;
+                    $form.append( createInput( "Amt",             getValue( formID, 'Amt'             ) ) );
+                    $form.append( createInput( "MerchantID",      getValue( formID, 'MerchantID'      ) ) );
+                    $form.append( createInput( "MerchantOrderNo", getValue( formID, 'MerchantOrderNo' ) ) );
+                    $form.append( createInput( "TimeStamp",       getValue( formID, 'TimeStamp'       ) ) );
+                    $form.append( createInput( "Version",         getValue( formID, 'Version'         ) ) );
+                    $form.append( createInput( "CheckValue",      getValue( formID, 'CheckValue'      ) ) );
+                    $form.append( createInput( "RespondType",     getValue( formID, 'RespondType'     ) ) );
+                    $form.append( createInput( getValue( formID, 'PaymentMethod' ), 1                   ) );
+                    $form.append( createInput( "HashKey",         getValue( formID, 'HashKey'         ) ) );
+                    $form.append( createInput( "HashIV",          getValue( formID, 'HashIV'          ) ) );
+                    $form.append( createInput( "ItemDesc",        getValue( formID, 'ItemDesc'        ) ) );
+                    $form.append( createInput( "LoginType",       getValue( formID, 'LoginType'       ) ) );
+                    $form.append( createInput( "Email",           getValue( formID, 'Email'           ) ) );
+                    $form.append( createInput( "ReturnURL",       getValue( formID, 'ReturnURL'       ) ) );
+                    $form.append( createInput( "NotifyURL",       getValue( formID, 'NotifyURL'       ) ) );
+                    $form.append( createInput( "CustomerURL",     getValue( formID, 'CustomerURL'     ) ) );
+                    $form.append( createInput( "ClientBackURL",   getValue( formID, 'ClientBackURL'   ) ) );
+
+                    $( 'body' ).append( $form );
+                    $form.submit();
+                    $( 'body' ).remove( $form );
+                } else if ( category === 'query' ) {
+                    var $iframe = $( '<iframe>' );
+                    $iframe.css( 'display', 'none' );
+                    $( 'body' ).append( $iframe );
+
+                    var $form = $( '<form>' );
+                    $form.attr( 'method', 'POST' );
+                    $form.attr( 'target', '_self' );
+                    $form.attr( 'action', 'https://capi.pay2go.com/API/QueryTradeInfo' );
+
+                    var formID = 'form-' + category;
+                    $form.append( createInput( "Amt",             getValue( formID, 'Amt'             ) ) );
+                    $form.append( createInput( "MerchantID",      getValue( formID, 'MerchantID'      ) ) );
+                    $form.append( createInput( "MerchantOrderNo", getValue( formID, 'MerchantOrderNo' ) ) );
+                    $form.append( createInput( "TimeStamp",       getValue( formID, 'TimeStamp'       ) ) );
+                    $form.append( createInput( "Version",         getValue( formID, 'Version'         ) ) );
+                    $form.append( createInput( "CheckValue",      getValue( formID, 'CheckValue'      ) ) );
+                    $form.append( createInput( "RespondType",     getValue( formID, 'RespondType'     ) ) );
+
+                    $( 'body' ).append( $form );
+                    $form.submit();
+                    $( 'body' ).remove( $form );
+
+                    // Forbidden by Same-Origin policy. Header 'Access-Control-Allow-Origin' is not set at the remote server.
+                    // $.ajax({
+                    //     url: 'https://capi.pay2go.com/API/QueryTradeInfo', 
+                    //     type: 'POST',      
+                    //     data: $( '#form-query' ).serialize(),
+                    //     success: function( resp ){
+                    //         alert( resp );
+                    //     }           
+                    // });
+                }
+            });
+        });
+    })(jQuery);
+    </script>
+</body>
+</html>

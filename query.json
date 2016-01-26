@@ -1,0 +1,76 @@
+[{
+    "label": "HashKey",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "type": "text",
+        "name": "HashKey"
+    }
+}, {
+    "label": "Amt",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "Amt",
+        "type": "number",
+        "min": "0",
+        "data-bind": "value:replyNumber",
+        "value": "1"
+    }
+}, {
+    "label": "MerchantID",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "MerchantID",
+        "type": "text"
+    }
+}, {
+    "label": "MerchantOrderNo",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "MerchantOrderNo",
+        "type": "text"
+    }
+}, {
+    "label": "Version",
+    "tag": "select",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "Version"
+    },
+    "options": [ "1.1", "1.2" ]
+}, {
+    "label": "HashIV",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "HashIV",
+        "type": "text"
+    }
+}, {
+    "label": "CheckValue",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "CheckValue",
+        "type": "text",
+        "readonly": "true"
+    }
+}, {
+    "label": "RespondType",
+    "tag": "select",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "RespondType"
+    },
+    "options": [ "JSON", "String" ]
+}]

@@ -1,0 +1,226 @@
+[{
+    "label": "HashKey",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "type": "text",
+        "name": "HashKey"
+    }
+}, {
+    "label": "Amt",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "Amt",
+        "type": "number",
+        "min": "0",
+        "data-bind": "value:replyNumber",
+        "value": "1"
+    }
+}, {
+    "label": "MerchantID",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "MerchantID",
+        "type": "text"
+    }
+}, {
+    "label": "MerchantOrderNo",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "MerchantOrderNo",
+        "type": "text"
+    }
+}, {
+    "label": "TimeStamp",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "TimeStamp",
+        "type": "text",
+        "placeholder": "In seconds"
+    }
+}, {
+    "label": "Version",
+    "tag": "select",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "Version"
+    },
+    "options": [ "1.1", "1.2" ]
+}, {
+    "label": "HashIV",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "HashIV",
+        "type": "text"
+    }
+}, {
+    "label": "CheckValue",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "CheckValue",
+        "type": "text",
+        "readonly": "true"
+    }
+}, {
+    "label": "Payment Method",
+    "tag": "select",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "PaymentMethod"
+    },
+    "options": [ "CREDIT", "CreditRed", "WEBATM", "VACC", "CVS", "BARCODE" ]
+}, {
+    "label": "ItemDesc",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-info",
+    "attrs": {
+        "name": "ItemDesc",
+        "type": "text",
+        "value": "Item Description",
+        "placeholder": "Item Description",
+        "maxlength": "50"
+    }
+}, {
+    "label": "LoginType",
+    "tag": "select",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "LoginType"
+    },
+    "options": [ "0", "1" ]
+}, {
+    "label": "RespondType",
+    "tag": "select",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "RespondType"
+    },
+    "options": [ "JSON", "String" ]
+}, {
+    "label": "Email",
+    "tag": "input",
+    "gen": "true",
+    "class": "alert-danger",
+    "attrs": {
+        "name": "Email",
+        "type": "text"
+    }
+}, {
+    "label": "LangType",
+    "tag": "select",
+    "class": "alert-info",
+    "attrs": {
+        "name": "LangType"
+    },
+    "options": [ "zh-tw", "en" ]
+}, {
+    "label": "UNIONPAY",
+    "tag": "select",
+    "class": "alert-info",
+    "attrs": {
+        "name": "UNIONPAY"
+    },
+    "options": [ "0", "1" ]
+}, {
+    "label": "CUSTOM",
+    "tag": "select",
+    "class": "alert-info",
+    "attrs": {
+        "name": "CUSTOM"
+    },
+    "options": [ "0", "1" ]
+}, {
+    "label": "TradeLimit",
+    "tag": "input",
+    "class": "alert-info",
+    "attrs": {
+        "name": "TradeLimit",
+        "type": "number",
+        "min": "60",
+        "max": "900",
+        "data-bind": "value-replyNumber",
+        "step": "1",
+        "placeholder": "Count-down in second. Limitless with 0"
+    }
+}, {
+    "label": "ExpireDate",
+    "tag": "input",
+    "class": "alert-info",
+    "attrs": {
+        "name": "ExpireDate",
+        "type": "text",
+        "placeholder": "Default to 7 days. Up to 180 days. Format: YYYYMMDD."
+    }
+}, {
+    "label": "EmailModify",
+    "tag": "select",
+    "class": "alert-info",
+    "attrs": {
+        "name": "EmailModify"
+    },
+    "options": [ "0", "1" ]
+}, {
+    "label": "OrderComment",
+    "tag": "input",
+    "class": "alert-info",
+    "attrs": {
+        "name": "OrderComment",
+        "type": "text",
+        "maxlength": "380"
+    }
+}, {
+    "label": "InstFlag",
+    "tag": "input",
+    "class": "alert-info",
+    "attrs": {
+        "name": "InstFlag",
+        "type": "text"
+    }
+}, {
+    "label": "ReturnURL",
+    "tag": "input",
+    "class": "alert-info",
+    "attrs": {
+        "name": "ReturnURL",
+        "type": "text"
+    }
+}, {
+    "label": "NotifyURL",
+    "tag": "input",
+    "class": "alert-info",
+    "attrs": {
+        "name": "NotifyURL",
+        "type": "text"
+    }
+}, {
+    "label": "ClientBackURL",
+    "tag": "input",
+    "class": "alert-info",
+    "attrs": {
+        "name": "ClientBackURL",
+        "type": "text"
+    }
+}, {
+    "label": "CustomerURL",
+    "tag": "input",
+    "class": "alert-info",
+    "attrs": {
+        "name": "CustomerURL",
+        "type": "text"
+    }
+}]
